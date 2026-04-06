@@ -1,0 +1,923 @@
+swagger: "2.0"
+
+info:
+  title: Asset & License Management System
+  version: "1.0.0"
+  description: "API for managing assets, categories, authentication and master data."
+host: localhost:7107
+basePath: /api
+schemes:
+  - https
+  - http
+
+securityDefinitions:
+  bearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+
+security:
+  - bearerAuth: []
+
+paths:
+
+  /api/auth/getToken:
+    post:
+      summary: Login get JWT token
+      tags:
+        - Auth
+      description: Authenticate user and return JWT token.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/LoginRequest'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Login successful
+          schema:
+            $ref: '#/definitions/LoginEnvelope'
+        400:
+          description: Bad request
+          schema:
+            $ref: '#/definitions/BadRequest'
+        401:
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error401'
+
+  /api/getcategory:
+ 
+    get:
+      summary: Get all Category
+      parameters:
+      tags:
+        - Master
+      responses:
+        200:
+          description: Category fetched successfully
+          schema:
+            $ref: '#/definitions/CategoryResponseDetail'
+        404:
+          description: Category not found
+          schema:
+            $ref: '#/definitions/NotFoundError'
+        500:
+          description: Internal server message
+          schema:
+            $ref: '#/definitions/Error500'
+
+  /api/getemployee:
+ 
+    get:
+      summary: Get all Employee
+      parameters:
+      tags:
+        - Master
+      responses:
+        200:
+          description: Employee fetched successfully
+          schema:
+            $ref: '#/definitions/EmployeeResponseDetail'
+        404:
+          description: Employee not found
+          schema:
+            $ref: '#/definitions/EmployeeNotFoundError'
+        500:
+          description: Internal server message
+          schema:
+            $ref: '#/definitions/Error500'
+
+  /api/getstatus:
+ 
+    get:
+      summary: Get all Status
+      parameters:
+      tags:
+        - Master
+      responses:
+        200:
+          description: Status fetched successfully
+          schema:
+            $ref: '#/definitions/StatusResponseDetail'
+        404:
+          description: Status not found
+          schema:
+            $ref: '#/definitions/StatusNotFoundError'
+        500:
+          description: Internal server message
+          schema:
+            $ref: '#/definitions/Error500'
+
+  /api/admin/createcategory:
+    post:
+      summary: Create Category
+      tags:
+        - Categories
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateCategoriesRequest'
+      responses:
+        201:
+          description: Categories created successfully
+          schema:
+            $ref: '#/definitions/CategoryResponse'
+        400:
+          description: Validation errors
+          schema:
+            $ref: '#/definitions/BadRequest'
+        500:
+          description: Internal Server message
+          schema:
+            $ref: '#/definitions/Error500'
+
+  /api/admin/dashboard:
+    get:
+      summary: Get all Categories
+      tags:
+        - Categories
+      parameters:
+        - in: query
+          name: pageNo
+          required: true
+          type: integer
+        - in: query
+          name: pageSize
+          required: true
+          type: integer
+        - in: query
+          name: search
+          required: true
+          type: string
+          minLength: 1
+          maxLength: 50
+          description: "Search by Category Name" 
+      responses:
+        200:
+          description: Category list fetched successfully
+          schema:
+            $ref: '#/definitions/PaginatedCategoryResponse'
+        404:
+          description: Category not found
+          schema:
+            $ref: '#/definitions/NotFoundError'
+        500:
+          description: Internal server message
+          schema:
+            $ref: '#/definitions/Error500'
+
+  /api/admin/getcategory{categoryId}:
+    get:
+      summary: Get Category by ID
+      tags:
+        - Categories
+      parameters:
+        - in: path
+          name: categoryId
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Category fetched successfully
+          schema:
+            $ref: '#/definitions/CategoryItem'
+        404:
+          description: Categories not found
+          schema:
+            $ref: '#/definitions/NotFoundError'
+        500:
+         description: Internal server message
+         schema:
+           $ref: '#/definitions/Error500'
+  /api/admin/updatecategory{categoryId}:
+    put:
+      summary: Update Category
+      tags:
+        - Categories
+      parameters:
+        - in: path
+          name: categoryId
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateCategoriesRequest'
+      responses:
+        200:
+          description: Category updated successfully
+          schema:
+            $ref: '#/definitions/UpdateCategoryResponse'
+        404:
+         description: Categories not found
+         schema:
+           $ref: '#/definitions/NotFoundError'
+        500:
+         description: Internal server message
+         schema:
+           $ref: '#/definitions/Error500'
+  /api/admin/deletecategory{categoryId}:
+    delete:
+      summary: Delete Category
+      tags:
+        - Categories
+      parameters:
+        - in: path
+          name: categoryId
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Category deleted successfully
+          schema:
+            $ref: '#/definitions/DeleteResponse'
+        404:
+         description: Categories not found
+         schema:
+           $ref: '#/definitions/NotFoundError'
+        500:
+         description: Internal server message
+         schema:
+           $ref: '#/definitions/Error500'
+
+  /api/admin/createasset:
+    post:
+      summary: Create Asset
+      tags:
+        - Assets
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/CreateAssetRequest'
+      responses:
+        201:
+          description: Asset created successfully
+          schema:
+            $ref: '#/definitions/AssetResponse'
+        400:
+          description: Validation errors
+          schema:
+            $ref: '#/definitions/BadRequest'
+        500:
+          description: Internal Server message
+          schema:
+            $ref: '#/definitions/Error500'
+
+  /api/admin/getasset/{id}:
+    get:
+      summary: Get Asset by ID
+      tags:
+        - Assets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Asset fetched successfully
+          schema:
+            $ref: '#/definitions/AssetDetailEnvelope'
+        404:
+          description: Asset not found
+          schema:
+            $ref: '#/definitions/NotFoundEnvelope'   
+        500:
+         description: Internal server message
+         schema:
+           $ref: '#/definitions/Error500'
+
+  /api/admin/getasset/dashboard:
+    get:
+      summary: Get all Asset
+      tags:
+        - Assets
+      parameters:
+      responses:
+        200:
+          description: Asset fetched successfully
+          schema:
+            $ref: '#/definitions/AssetDetailEnvelope'
+        404:
+          description: Asset not found
+          schema:
+            $ref: '#/definitions/NotFoundEnvelope'   
+        500:
+         description: Internal server message
+         schema:
+           $ref: '#/definitions/Error500'
+
+  /api/admin/update/{id}:
+    put:
+      summary: Update Asset
+      tags:
+        - Assets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateAssetRequest'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Asset updated successfully
+          schema:
+            $ref: '#/definitions/UpdateAssetResponse'
+        404:
+         description: Asset not found
+         schema:
+           $ref: '#/definitions/NotFoundEnvelope'
+        500:
+         description: Internal server message
+         schema:
+           $ref: '#/definitions/Error500'
+
+  /assets/{id}/assign:
+    post:
+      summary: "Assign asset to an employee"
+      tags:
+        - Assets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/AssignAssetRequest'
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "Asset assigned successfully"
+          schema:
+            $ref: '#/definitions/AssetDetailEnvelope'
+        404:
+         description: Asset not found
+         schema:
+           $ref: '#/definitions/NotFoundEnvelope'
+        500:
+         description: Internal server message
+         schema:
+           $ref: '#/definitions/Error500'
+
+  /api/admin/returnasset/{id}:
+    post:
+      summary: Return an Asset
+      tags:
+        - Assets
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/ReturnAssetRequest'
+      responses:
+        200:
+          description: Asset returned successfully
+          schema:
+            $ref: '#/definitions/AssetDetailEnvelope'
+        400:
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/BadRequest'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFoundEnvelope'
+
+  /api/admin/reportlist:
+    get:
+      summary: Get Asset Reports
+      tags:
+        - Reports
+      parameters:
+        - name: status
+          in: query
+          type: string
+          description: filter by status
+        - name: category
+          in: query
+          type: string
+          description: filter by Category
+      responses:
+        200:
+          description: List of assets
+          schema:
+            $ref: '#/definitions/AssetListEnvelope'
+
+definitions:
+
+  LoginRequest:
+    type: object
+    properties:
+      data:
+        type: object
+        properties:
+          email:
+            type: string
+      message:
+        type: string
+        example: null
+      statusCode:
+        type: integer
+        example: 200
+      
+
+  LoginEnvelope:
+    type: object
+    properties:
+      data:
+        type: object
+        properties:
+          token:
+            type: string
+          expiresIn:
+            type: string
+      message:
+        type: string
+        example: null
+      statusCode:
+        type: integer
+        example: 200
+
+  CreateAssetRequest:
+    type: object
+    properties:
+      assetName:
+        type: string
+      assetCategory:
+        type: string
+      assetId:
+        type: integer
+      serialNumber:
+        type: integer
+      purchaseDate:
+        type: string
+      assetCost:
+        type: number
+      vendorName:
+        type: string
+      assetStatus:
+        type: string
+      description:
+        type: string
+      assignEmployee:
+        type: string
+      message:
+        type: string
+        example: null
+      statusCode:
+        type: integer
+
+  UpdateAssetRequest:
+    type: object
+    properties:
+      data:
+        type: object
+        properties:
+          assetName:
+            type: string
+          assetCategory:
+            type: string
+          assetId:
+            type: integer
+          serialNumber:
+            type: integer
+          purchaseDate:
+            type: string
+          assetCost:
+            type: number
+          vendorName:
+            type: string
+          assetStatus:
+            type: string
+          description:
+            type: string
+          assignEmployee:
+            type: string
+      message:
+        type: string
+        example: null
+      statusCode:
+        type: integer
+
+  UpdateAssetResponse:
+    type: object
+    properties:
+      data:
+        type: object
+        properties:
+          assetId:
+            type: integer
+      message:
+        type: string
+        example: null
+      statusCode:
+        type: integer
+
+  AssetDetailEnvelope:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            assetName:
+              type: string
+            assetCategory:
+              type: string
+            assetId:
+              type: integer
+            serialNumber:
+              type: integer
+            purchaseDate:
+              type: string
+            assetCost:
+              type: number
+            vendorName:
+              type: string
+            assetStatus:
+              type: string
+            description:
+              type: string
+            assignEmployee:
+              type: string
+      message:
+        type: string
+        example: null
+      statusCode:
+        type: integer
+
+  AssignAssetRequest:
+    type: object
+    properties:
+      data:
+        type: object
+        properties:
+          employeeId:
+            type: integer
+          assignmentDate:
+            type: string
+          expectedReturnDate:
+            type: string
+          notes:
+            type: string
+      message:
+        type: string
+        example: null
+      statusCode:
+        type: integer
+
+  ReturnAssetRequest:
+    type: object
+    properties:
+      data:
+        type: object
+        properties:
+          returnDate:
+            type: string
+          conditionOnReturn:
+            type: string
+          notes:
+            type: string
+      message:
+        type: string
+        example: null
+      statusCode:
+        type: integer
+
+  AssetListEnvelope:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/CreateAssetRequest'
+      message:
+        type: string
+      statusCode:
+        type: integer
+
+  CategoryResponseDetail:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            CategoryId:
+              type: integer
+            CategoryName:
+              type: string
+      message:
+        type: string
+        example: null
+      statusCode:
+        type: integer
+        example: 200
+
+  EmployeeResponseDetail:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            EmployeeId:
+              type: integer
+            EmployeeName:
+              type: string
+      message:
+        type: string
+        example: null
+      statusCode:
+        type: integer
+        example: 200
+
+  StatusResponseDetail:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            StatusId:
+              type: integer
+            StatusName:
+              type: string
+      message:
+        type: string
+        example: null
+      statusCode:
+        type: integer
+        example: 200
+
+  CreateCategoriesRequest:
+    type: object
+    required:
+      - categoryName
+      - typeId
+      - statusId
+    properties:
+        data:
+          type: object
+          properties:
+            categoryName:
+              type: string
+              minLength: 3
+              maxLength: 50
+              example: "Laptop"
+              description: "Mandatory. (Laptop, Dekstop, Monitor)."
+            typeId:
+              type: integer
+              example: 1
+              description: "Mandatory. (Asset/License)."
+            statusId:
+              type: integer
+              example: 1
+              description: "Mandatory. (Available,Assigned,Damaged,Under Repair,Lost,Return)."
+        message:
+          type: string
+          example: null
+        statusCode:
+          type: integer
+          example: 200
+        
+
+  CategoryResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 101
+            message:
+              type: string
+              example: "Category Created Successfully"
+        message:
+          type: string
+          example: null
+        statusCode:
+            type: integer
+            example: 201
+  AssetResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            assetId:
+              type: integer
+              example: 101
+            message:
+              type: string
+              example: "Asset Created Successfully"
+        message:
+          type: string
+          example: null
+        statusCode:
+            type: integer
+            example: 201
+
+  PaginatedCategoryResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/definitions/CategoryItem'
+        pageNo:
+          type: integer
+          example: 1
+        pageSize:
+          type: integer
+          example: 10
+        totalRecords:
+          type: integer
+          example: 15
+        totalPages:
+          type: integer
+          example: 10
+        search:
+          type: string
+          example: "Laptop"
+          x-nullable: true
+          description: "The search keyword applied to the results."
+        message:
+          type: string
+          x-nullable: true
+          example: null
+        statusCode:
+          type: integer
+          example: 200
+          
+  CategoryItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        example: 101
+      categoryName:
+        type: string
+        example: "Laptop"
+      type:
+        type: string
+        example: "Asset"
+      status:
+        type: string
+        example: "Available"
+      message:
+          type: string
+          example: null
+      statusCode:
+          type: integer
+          example: 200
+
+  UpdateCategoryResponse:
+      type: object
+      properties:
+        data:
+          type: object
+          properties:
+            typeId:
+              type: integer
+              example: 1
+            statusId:
+              type: integer
+              example: 1
+        message:
+          type: string
+          example: null
+        statusCode:
+          type: integer
+          example: 200
+          
+  DeleteResponse:
+      type: object
+      properties:
+        data:
+          type: string
+          example: "Category deleted successfully"
+        message:
+          type: string
+          example: null
+        statusCode:
+          type: integer
+          example: 200
+  Error401:
+      type: object
+      properties:
+        data:
+          type: object
+          example: null
+        message:
+          type: array
+          items:
+            type: string
+          example: "Authentication message"
+        statusCode:
+          type: integer
+          example: 401
+  Error500:
+      type: object
+      properties:
+        data:
+          type: object
+          example: null
+        message:
+          type: array
+          items:
+            type: string
+          example: "Internal server message"
+        statusCode:
+          type: integer
+          example: 500
+  BadRequest:
+      type: object
+      properties:
+        data:
+          type: object
+          example: null
+        message:
+          type: string
+          example: "Invalid request data"
+        statusCode:
+          type: integer
+          example: 400
+  NotFoundError:
+      type: object
+      properties:
+        data:
+          type: object
+          example: null
+        message:
+          type: string
+          example: "Category not found"
+        statusCode:
+          type: integer
+          example: 404
+  NotFoundEnvelope:
+    type: object
+    properties:
+      data:
+        type: object
+        example: null
+      message:
+        type: string
+        example: "The requested resource was not found."
+      statusCode:
+        type: integer
+        example: 404
+  StatusNotFoundError:
+      type: object
+      properties:
+        data:
+          type: object
+          example: null
+        message:
+          type: string
+          example: "Status not found"
+        statusCode:
+          type: integer
+          example: 404
+  EmployeeNotFoundError:
+      type: object
+      properties:
+        data:
+          type: object
+          example: null
+        message:
+          type: string
+          example: "Employee not found"
+        statusCode:
+          type: integer
+          example: 404
+  
