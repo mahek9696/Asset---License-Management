@@ -5,6 +5,24 @@
 
 ## 📝 USER STORY 1: CREATE CATEGORY - TEST CASES
 
+### Standard Execution Fields
+Every test case in this document should be written with the following execution fields in order:
+- API Calls
+- Methods
+- Header
+- Pre-Script
+- Post-Script
+- Input
+- Expected Result
+
+Swagger mapping rule:
+- Use the project Swagger contract to fill `API Calls`, `Methods`, and `Header` only when the case is API-driven.
+- Use `N/A` for fields that do not apply to a UI-only case.
+- `Pre-Script` should contain setup needed before execution.
+- `Post-Script` should contain cleanup or verification after execution.
+- `Input` should contain request payload or UI input values.
+- `Expected Result` should contain the expected response or UI outcome.
+
 ### SC-1.1: Valid Category Creation
 Applies to:
 - TC-1.1
@@ -15,6 +33,12 @@ Applies to:
 Test ID: TC-1.1
 Title: Create category using valid required fields with type Asset
 Precondition: User is IT Admin, logged in, on Create Category screen
+API Calls: POST /api/admin/createcategory
+Methods: POST
+Header: Authorization: Bearer <token>, Content-Type: application/json
+Pre-Script: Create or confirm IT Admin session and category master data is available.
+Post-Script: Verify new category appears in Category List and clean up test data if needed.
+Input: categoryName="Laptop", typeId=1, statusId=1
 Steps:
 1. Enter Category Name: "Laptop"
 2. Select Type: "Asset"
@@ -32,6 +56,12 @@ Pass/Fail: [ ]
 Test ID: TC-1.2
 Title: Create category using valid required fields with type License
 Precondition: User is IT Admin, logged in, on Create Category screen
+API Calls: POST /api/admin/createcategory
+Methods: POST
+Header: Authorization: Bearer <token>, Content-Type: application/json
+Pre-Script: Create or confirm IT Admin session and category master data is available.
+Post-Script: Verify new category appears in Category List and clean up test data if needed.
+Input: categoryName="MS365 License", typeId=2, statusId=1
 Steps:
 1. Enter Category Name: "MS365 License"
 2. Select Type: "License"
@@ -311,7 +341,7 @@ Pass/Fail: [ ]
 
 ## 📝 USER STORY 2: ASSET LIST - TEST CASES
 
-### SC-2.1: Asset List Display and Search
+### SC-2.1: Asset List Display and Search.
 Applies to:
 - TC-2.1
 - TC-2.2
@@ -367,7 +397,7 @@ Data: Serial: "ABC-123/XYZ"
 Pass/Fail: [ ]
 ```
 
-### SC-2.2: Asset List Filtering
+### SC-2.2: Asset List Filtering.
 Applies to:
 - TC-2.4
 - TC-2.5
@@ -428,7 +458,7 @@ Data: N/A
 Pass/Fail: [ ]
 ```
 
-### SC-2.3: Asset List Pagination and Deletion
+### SC-2.3: Asset List Pagination and Deletion.
 Applies to:
 - TC-2.7
 - TC-2.8
@@ -469,7 +499,7 @@ Data: 90 assets → delete 1 → 89 remaining
 Pass/Fail: [ ]
 ```
 
-### SC-2.4: Asset List Export
+### SC-2.4: Asset List Export.
 Applies to:
 - TC-2.9
 - TC-2.10
@@ -518,7 +548,7 @@ Pass/Fail: [ ]
 
 ## 📝 USER STORY 3: ASSET DETAILS - TEST CASES
 
-### SC-3.1: Asset Details Overview
+### SC-3.1: Asset Details Overview.
 Applies to:
 - TC-3.1
 - TC-3.2
@@ -558,7 +588,7 @@ Data: Asset: Laptop-001
 Pass/Fail: [ ]
 ```
 
-### SC-3.2: Assignment Visibility
+### SC-3.2: Assignment Visibility.
 Applies to:
 - TC-3.3
 - TC-3.4
@@ -740,7 +770,7 @@ Data: Current Assignee: John Doe
 Pass/Fail: [ ]
 ```
 
-### SC-3.5: Export Asset Details
+### SC-3.5: Export Asset Details.
 Applies to:
 - TC-3.12
 
@@ -1090,3 +1120,30 @@ Pass/Fail: [ ]
 ---
 
 **Test Suite Complete**: 50+ test cases covering critical paths, validations, edge cases, and error scenarios
+
+
+
+Validate Authentication
+Validate Authentication Error Handling
+Validate Category Creation
+Validate Duplicate Category Handling
+Validate Category Name Boundary Validation
+Validate Mandatory Field Validation
+Validate Whitespace and Normalization Handling
+Validate Optional Property Configuration
+Validate Cancel and Save Failure Recovery
+Validate Asset Creation
+Validate Asset Name and Category Validation
+Validate Purchase Date and Cost Validation
+Validate Property Handling on Category Selection
+Validate Optional Assignment and Cancel Handling
+Validate Asset List Display and Search
+Validate Asset List Filtering
+Validate Asset List Pagination and Deletion
+Validate Asset List Export
+Validate Asset Details Overview
+Validate Assignment Visibility
+Validate History and Edit Handling
+Validate Asset Status Change
+Validate Asset Transfer
+Validate Export Asset Details

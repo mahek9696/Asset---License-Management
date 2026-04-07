@@ -70,6 +70,27 @@ paths:
           schema:
             $ref: '#/definitions/Error500'
 
+  /api/gettype:
+ 
+    get:
+      summary: Get all Types
+      parameters:
+      tags:
+        - Master
+      responses:
+        200:
+          description: Type fetched successfully
+          schema:
+            $ref: '#/definitions/TypeResponseDetail'
+        404:
+          description: Category not found
+          schema:
+            $ref: '#/definitions/TypeNotFoundError'
+        500:
+          description: Internal server message
+          schema:
+            $ref: '#/definitions/Error500'
+
   /api/getemployee:
  
     get:
@@ -127,7 +148,7 @@ paths:
         201:
           description: Categories created successfully
           schema:
-            $ref: '#/definitions/CategoryResponse'
+            $ref: '#/definitions/ServiceResponse'
         400:
           description: Validation errors
           schema:
@@ -186,7 +207,7 @@ paths:
         200:
           description: Category fetched successfully
           schema:
-            $ref: '#/definitions/CategoryItem'
+            $ref: '#/definitions/CategoryItemById'
         404:
           description: Categories not found
           schema:
@@ -214,7 +235,7 @@ paths:
         200:
           description: Category updated successfully
           schema:
-            $ref: '#/definitions/UpdateCategoryResponse'
+            $ref: '#/definitions/ServiceResponse'
         404:
          description: Categories not found
          schema:
@@ -237,7 +258,7 @@ paths:
         200:
           description: Category deleted successfully
           schema:
-            $ref: '#/definitions/DeleteResponse'
+            $ref: '#/definitions/ServiceResponse'
         404:
          description: Categories not found
          schema:
@@ -262,7 +283,7 @@ paths:
         201:
           description: Asset created successfully
           schema:
-            $ref: '#/definitions/AssetResponse'
+            $ref: '#/definitions/ServiceResponse'
         400:
           description: Validation errors
           schema:
@@ -337,7 +358,7 @@ paths:
         200:
           description: Asset updated successfully
           schema:
-            $ref: '#/definitions/UpdateAssetResponse'
+            $ref: '#/definitions/ServiceResponse'
         404:
          description: Asset not found
          schema:
@@ -368,7 +389,7 @@ paths:
         200:
           description: "Asset assigned successfully"
           schema:
-            $ref: '#/definitions/AssetDetailEnvelope'
+            $ref: '#/definitions/ServiceResponse'
         404:
          description: Asset not found
          schema:
@@ -397,7 +418,7 @@ paths:
         200:
           description: Asset returned successfully
           schema:
-            $ref: '#/definitions/AssetDetailEnvelope'
+            $ref: '#/definitions/ServiceResponse'
         400:
           description: Bad Request
           schema:
@@ -432,17 +453,9 @@ definitions:
   LoginRequest:
     type: object
     properties:
-      data:
-        type: object
-        properties:
-          email:
-            type: string
-      message:
+      email:
         type: string
-        example: null
-      statusCode:
-        type: integer
-        example: 200
+        example: 'john@1rivet.com'
       
 
   LoginEnvelope:
@@ -479,135 +492,95 @@ definitions:
         type: number
       vendorName:
         type: string
-      assetStatus:
+      assetStatusId:
         type: string
       description:
         type: string
-      assignEmployee:
+      assignedEmployeeId:
         type: string
-      message:
-        type: string
-        example: null
-      statusCode:
-        type: integer
 
   UpdateAssetRequest:
     type: object
     properties:
-      data:
-        type: object
-        properties:
-          assetName:
-            type: string
-          assetCategory:
-            type: string
-          assetId:
-            type: integer
-          serialNumber:
-            type: integer
-          purchaseDate:
-            type: string
-          assetCost:
-            type: number
-          vendorName:
-            type: string
-          assetStatus:
-            type: string
-          description:
-            type: string
-          assignEmployee:
-            type: string
-      message:
+      assetName:
         type: string
-        example: null
-      statusCode:
+      assetCategory:
+        type: string
+      assetId:
         type: integer
+      serialNumber:
+        type: integer
+      purchaseDate:
+        type: string
+      assetCost:
+        type: number
+      vendorName:
+        type: string
+      assetStatusId:
+        type: string
+      description:
+        type: string
+      assignedEmployee:
+        type: string
 
-  UpdateAssetResponse:
+  AssetDetailResponse:
     type: object
     properties:
-      data:
-        type: object
-        properties:
-          assetId:
-            type: integer
-      message:
+      assetName:
         type: string
-        example: null
-      statusCode:
+      assetCategory:
+        type: string
+      assetId:
         type: integer
-
+      serialNumber:
+        type: integer
+      purchaseDate:
+        type: string
+      assetCost:
+        type: number
+      vendorName:
+        type: string
+      assetStatus:
+        type: string
+      description:
+        type: string
+      assignedEmployee:
+        type: string
+    
   AssetDetailEnvelope:
     type: object
     properties:
       data:
-        type: array
-        items:
-          type: object
-          properties:
-            assetName:
-              type: string
-            assetCategory:
-              type: string
-            assetId:
-              type: integer
-            serialNumber:
-              type: integer
-            purchaseDate:
-              type: string
-            assetCost:
-              type: number
-            vendorName:
-              type: string
-            assetStatus:
-              type: string
-            description:
-              type: string
-            assignEmployee:
-              type: string
+        allOf: 
+        - $ref: '#/definitions/AssetDetailResponse'
       message:
         type: string
         example: null
       statusCode:
         type: integer
+        example: 200 
 
   AssignAssetRequest:
     type: object
     properties:
-      data:
-        type: object
-        properties:
-          employeeId:
-            type: integer
-          assignmentDate:
-            type: string
-          expectedReturnDate:
-            type: string
-          notes:
-            type: string
-      message:
-        type: string
-        example: null
-      statusCode:
+      employeeId:
         type: integer
+      assignmentDate:
+        type: string
+      expectedReturnDate:
+        type: string
+      notes:
+       type: string
 
   ReturnAssetRequest:
     type: object
     properties:
-      data:
-        type: object
-        properties:
-          returnDate:
-            type: string
-          conditionOnReturn:
-            type: string
-          notes:
-            type: string
-      message:
+      returnDate:
         type: string
-        example: null
-      statusCode:
-        type: integer
+      conditionOnReturn:
+        type: string
+      notes:
+        type: string
 
   AssetListEnvelope:
     type: object
@@ -615,7 +588,7 @@ definitions:
       data:
         type: array
         items:
-          $ref: '#/definitions/CreateAssetRequest'
+          $ref: '#/definitions/AssetDetailResponse'
       message:
         type: string
       statusCode:
@@ -632,6 +605,25 @@ definitions:
             CategoryId:
               type: integer
             CategoryName:
+              type: string
+      message:
+        type: string
+        example: null
+      statusCode:
+        type: integer
+        example: 200
+
+  TypeResponseDetail:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          type: object
+          properties:
+            TypeId:
+              type: integer
+            TypeName:
               type: string
       message:
         type: string
@@ -685,32 +677,22 @@ definitions:
       - typeId
       - statusId
     properties:
-        data:
-          type: object
-          properties:
-            categoryName:
-              type: string
-              minLength: 3
-              maxLength: 50
-              example: "Laptop"
-              description: "Mandatory. (Laptop, Dekstop, Monitor)."
-            typeId:
-              type: integer
-              example: 1
-              description: "Mandatory. (Asset/License)."
-            statusId:
-              type: integer
-              example: 1
-              description: "Mandatory. (Available,Assigned,Damaged,Under Repair,Lost,Return)."
-        message:
-          type: string
-          example: null
-        statusCode:
-          type: integer
-          example: 200
+      categoryName:
+        type: string
+        minLength: 3
+        maxLength: 50
+        example: "Laptop"
+        description: "Mandatory. (Laptop, Dekstop, Monitor)."
+      typeId:
+        type: integer
+        example: 1
+        description: "Mandatory. (Asset/License)."
+      statusId:
+        type: integer
+        example: 1
+        description: "Mandatory. (Available,Assigned,Damaged,Under Repair,Lost,Return)."
         
-
-  CategoryResponse:
+  ServiceResponse:
       type: object
       properties:
         data:
@@ -719,12 +701,9 @@ definitions:
             id:
               type: integer
               example: 101
-            message:
-              type: string
-              example: "Category Created Successfully"
         message:
           type: string
-          example: null
+          example: "Transaction executed successfully"
         statusCode:
             type: integer
             example: 201
@@ -794,44 +773,18 @@ definitions:
       status:
         type: string
         example: "Available"
+  CategoryItemById:
+    type: object
+    properties:
+      data:
+        allOf: 
+        - $ref: '#/definitions/CategoryItem'
       message:
-          type: string
-          example: null
+        type: string
+        example: null
       statusCode:
-          type: integer
-          example: 200
-
-  UpdateCategoryResponse:
-      type: object
-      properties:
-        data:
-          type: object
-          properties:
-            typeId:
-              type: integer
-              example: 1
-            statusId:
-              type: integer
-              example: 1
-        message:
-          type: string
-          example: null
-        statusCode:
-          type: integer
-          example: 200
-          
-  DeleteResponse:
-      type: object
-      properties:
-        data:
-          type: string
-          example: "Category deleted successfully"
-        message:
-          type: string
-          example: null
-        statusCode:
-          type: integer
-          example: 200
+        type: integer
+        example: 200 
   Error401:
       type: object
       properties:
@@ -905,6 +858,18 @@ definitions:
         message:
           type: string
           example: "Status not found"
+        statusCode:
+          type: integer
+          example: 404
+  TypeNotFoundError:
+      type: object
+      properties:
+        data:
+          type: object
+          example: null
+        message:
+          type: string
+          example: "Type not found"
         statusCode:
           type: integer
           example: 404
